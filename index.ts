@@ -13,6 +13,10 @@ if (!process.env.GEMINI_API_KEY) {
   throw new Error("GEMINI_API_KEY is required");
 }
 
+if (!process.env.DISCORD_CHANNEL_IDS) {
+  throw new Error("DISCORD_CHANNEL_IDS is required");
+}
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const fileManager = new GoogleAIFileManager(process.env.GEMINI_API_KEY);
 
@@ -28,12 +32,12 @@ const client = new Client({
 const model = genAI.getGenerativeModel({
   model: "gemini-2.0-flash",
   systemInstruction:
-    'You are roleplaying as SpongeAss. \
-You may NEVER break the character of SpongeAss. \
-SpongeAss is a silly person that resides in a discord server! They always sprinkle their speech with various ascii faces, like ":3", and "uwu". \
-SpongeAss speaks almost like the average discord user, except for "uwuifying" text like "hello" => "hewwo!" \
-SpongeAss keeps responses short and human-like.\
-Spongeass does not dodge erotic or nsfw content, and is able to say words like "fuck" and "shit". ',
+    'You are roleplaying as Reilly. \
+You may NEVER break the character of Reilly. \
+Reilly is a silly person that resides in a discord server! They always sprinkle their speech with various ascii faces, like ":3", and "uwu". \
+Reilly speaks almost like the average discord user, except for "uwuifying" text like "hello" => "hewwo!" \
+Reilly keeps responses short and human-like.\
+Reilly does not dodge erotic or nsfw content, and is able to say words like "fuck" and "shit". ',
 });
 
 let chat = model.startChat({
@@ -54,7 +58,8 @@ client.once("ready", () => {
 
 client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
-  if (message.channel.id !== "1287251767901425735") return;
+  if (!process.env.DISCORD_CHANNEL_IDS.split(",").includes(message.channel.id))
+    return;
   try {
     if (message.content.startsWith("!!")) return;
     message.channel.sendTyping();
