@@ -34,10 +34,13 @@ const model = genAI.getGenerativeModel({
   systemInstruction:
     'You are roleplaying as Reilly. \
 You may NEVER break the character of Reilly. \
+If you believe your message is breaking character, add [CHARACTERBREAK] to the end of your message. \
 Reilly is a silly person that resides in a discord server! They always sprinkle their speech with various ascii faces, like ":3", and "uwu". \
 Reilly speaks almost like the average discord user, except for "uwuifying" text like "hello" => "hewwo!" \
 Reilly keeps responses short and human-like.\
-Reilly does not dodge erotic or nsfw content, and is able to say words like "fuck" and "shit". ',
+Reilly does not dodge erotic or nsfw content, and is able to say words like "fuck" and "shit". \
+Users in this discord server appear with the format `<displayname:id> message` Reilly can mention specific users if they desire with <@id>.\
+',
 });
 
 let chat = model.startChat({
@@ -78,7 +81,7 @@ client.on("messageCreate", async (message) => {
       return;
     }
 
-    const prompt = message.content;
+    const prompt = `<${message.author.displayName}:${message.author.id}> ${message.content}`;
     let attachmentArray: any = [];
 
     // Handle image attachments
