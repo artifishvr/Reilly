@@ -26,7 +26,7 @@ const client = new Client({
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
   ],
-  allowedMentions: { parse: [], repliedUser: false },
+  allowedMentions: { parse: ["users"], repliedUser: false },
 });
 
 const model = genAI.getGenerativeModel({
@@ -74,10 +74,6 @@ client.on("messageCreate", async (message) => {
       });
       message.reply(`♻️ die`);
 
-      return;
-    }
-
-    if (message.content.startsWith("%pic")) {
       return;
     }
 
