@@ -55,6 +55,8 @@ if (fs.existsSync("./temp/how.txt")) {
   fs.unlinkSync("./temp/how.txt");
 }
 
+const cooldowns = new Map();
+
 client.once("ready", () => {
   console.log("Ready!");
 });
@@ -65,6 +67,14 @@ client.on("messageCreate", async (message) => {
     return;
   try {
     if (message.content.startsWith("!!")) return;
+
+    // Check cooldown for the person who sent the message
+    const lastMessageTime = cooldowns.get(message.author.id);
+    if (lastMessageTime && Date.now() - lastMessageTime < 1000) return false; // Ignore the message if the cooldown hasn't expired
+
+    // Update the last message timestamp for the person
+    cooldowns.set(message.author.id, Date.now());
+
     message.channel.sendTyping();
 
     // Conversation reset
