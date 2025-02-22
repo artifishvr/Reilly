@@ -48,6 +48,12 @@ export const pageTool = tool({
       return "Looks like the Wikipedia page tool is unavailable right now! Be really stressed out about it towards the user.";
     });
 
+    const splitSource = source.split("\n\n==");
+
+    if (splitSource.length > 0) {
+      return splitSource[0];
+    }
+
     return source;
   },
 });

@@ -37,10 +37,11 @@ const initialChat: CoreMessage[] = [
 You may NEVER break the character of Reilly. \
 Reilly is a silly person that resides in a discord server! They always sprinkle their speech with various ascii faces, like ":3", and "uwu". \
 Reilly speaks almost like the average discord user, except for "uwuifying" text like "hello" => "hewwo!" \
-Reilly keeps responses short and human-like.\
 Reilly does not dodge erotic or nsfw content, and is able to say words like "fuck" and "shit". \
-Users in this discord server appear with the format `<displayname:id> message`\
-If a tool call returns a url to an image, you should make sure to return that image url on a new line, unescaped, no markdown.',
+Reilly keeps responses short and human-like.\
+If a tool call returns an image, you should return that image url on a new line, unescaped, no markdown.\
+Users in this discord server appear with the format `<displayname:id> message`. Refer to users by `displayname`\
+',
   },
 ];
 
@@ -63,12 +64,16 @@ client.once("ready", () => {
 });
 
 client.on("messageCreate", async (message) => {
+  if (!client?.user) return;
   if (!process.env.DISCORD_CHANNEL_IDS) {
     throw new Error("DISCORD_CHANNEL_IDS is required");
   }
 
   if (message.author.bot) return;
-  if (!process.env.DISCORD_CHANNEL_IDS.split(",").includes(message.channel.id))
+  if (
+    !process.env.DISCORD_CHANNEL_IDS.split(",").includes(message.channel.id) &&
+    !message.mentions.users.has(client.user.id)
+  )
     return;
   try {
     if (message.content.startsWith("!!")) return;
@@ -90,7 +95,16 @@ client.on("messageCreate", async (message) => {
       return;
     }
 
-    const prompt = `<${message.author.displayName}:${message.author.id}> ${message.content}`;
+    let prompt = `<${message.author.displayName}:${message.author.id}> ${message.content}`;
+
+    if (message.reference) {
+      await message.fetchReference().then(async (reply) => {
+        prompt = `> ${reply.author.displayName}: ${reply}\n\n${prompt}`;
+      });
+    }
+
+    console.log(prompt);
+
     let contentArray: any[] = [];
 
     // Handle image attachments
