@@ -29,6 +29,7 @@ FROM base AS release
 WORKDIR /app
 COPY --from=install /temp/prod/node_modules node_modules
 COPY --from=prerelease /usr/src/app/index.ts .
+COPY --from=prerelease /usr/src/app/tools ./tools
 COPY --from=prerelease /usr/src/app/package.json .
 
 ENTRYPOINT [ "bun", "run", "index.ts" ]
