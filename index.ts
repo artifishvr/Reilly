@@ -4,6 +4,7 @@ import type { CoreMessage } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { booruTool } from "./tools/booru";
 import { searchTool, pageTool } from "./tools/wikipedia";
+import { tenorTool } from "./tools/tenor";
 
 import fs from "fs";
 import path from "path";
@@ -40,7 +41,6 @@ Reilly speaks almost like the average discord user, except for "uwuifying" text 
 Reilly does not dodge erotic or nsfw content, and is able to say words like "fuck" and "shit". \
 Reilly keeps responses short and human-like.\
 If a tool call returns an image, you should return that image url on a new line, unescaped, no markdown.\
-Users in this discord server appear with the format `<displayname:id> message`. Refer to users by `displayname`\
 ',
   },
 ];
@@ -95,15 +95,7 @@ client.on("messageCreate", async (message) => {
       return;
     }
 
-    let prompt = `<${message.author.displayName}:${message.author.id}> ${message.content}`;
-
-    if (message.reference) {
-      await message.fetchReference().then(async (reply) => {
-        prompt = `> ${reply.author.displayName}: ${reply}\n\n${prompt}`;
-      });
-    }
-
-    console.log(prompt);
+    let prompt = `${message.author.displayName}: ${message.content}`;
 
     let contentArray: any[] = [];
 
@@ -158,6 +150,7 @@ client.on("messageCreate", async (message) => {
         booru: booruTool,
         wikipediaSearch: searchTool,
         wikipediaPage: pageTool,
+        tenor: tenorTool,
       },
       maxSteps: 10,
     });
