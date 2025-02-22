@@ -3,6 +3,8 @@ import { z } from "zod";
 import { generateText, tool } from "ai";
 import type { CoreMessage } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { fireworks } from "@ai-sdk/fireworks";
+import { experimental_generateImage as generateImage } from "ai";
 
 import fs from "fs";
 import path from "path";
@@ -69,6 +71,8 @@ client.on("messageCreate", async (message) => {
     return;
   try {
     if (message.content.startsWith("!!")) return;
+    const args = message.content.slice(1).trim().split(/ +/);
+    console.log(args);
 
     // Check cooldown for the person who sent the message
     const lastMessageTime = cooldowns.get(message.author.id);
@@ -83,6 +87,25 @@ client.on("messageCreate", async (message) => {
     if (message.content.startsWith("%reset")) {
       chat = initialChat;
       message.reply(`♻️ die`);
+
+      return;
+    }
+
+    // Handle image generation
+    if (message.content.startsWith("%pic")) {
+      const { image } = await generateImage({
+        model: fireworks.image("accounts/fireworks/models/flux-1-schnell-fp8"),
+        prompt: args.join(" "),
+      });
+
+      // Convert the image to a Buffer
+      const buffer = Buffer.from(image.uint8Array);
+
+      message.reply({
+        content: "",
+        files: [buffer],
+        failIfNotExists: false,
+      });
 
       return;
     }
