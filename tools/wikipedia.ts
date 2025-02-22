@@ -18,7 +18,10 @@ export const searchTool = tool({
 
     const { pages } = await ofetch(
       `https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=${query}&limit=${limit}`
-    );
+    ).catch((e) => {
+      console.error(e);
+      return "Looks like the Wikipedia search tool is unavailable right now! Be really stressed out about it towards the user.";
+    });
 
     pages.forEach((page: any) => {
       cleanPageList.push({
@@ -40,7 +43,10 @@ export const pageTool = tool({
   execute: async function ({ key }) {
     const { source } = await ofetch(
       `https://api.wikimedia.org/core/v1/wikipedia/en/page/${key}`
-    );
+    ).catch((e) => {
+      console.error(e);
+      return "Looks like the Wikipedia page tool is unavailable right now! Be really stressed out about it towards the user.";
+    });
 
     return source;
   },

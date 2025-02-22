@@ -46,9 +46,11 @@ If a tool call returns a url to an image, you should make sure to return that im
 
 let chat = initialChat;
 
-if (!fs.existsSync("./temp")) {
-  fs.mkdirSync("./temp");
+if (fs.existsSync("./temp")) {
+  fs.rmSync("./temp", { recursive: true });
 }
+
+fs.mkdirSync("./temp");
 
 if (fs.existsSync("./temp/how.txt")) {
   fs.unlinkSync("./temp/how.txt");
