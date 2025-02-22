@@ -1,6 +1,7 @@
 import { Client, GatewayIntentBits } from "discord.js";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { GoogleAIFileManager, FileState } from "@google/generative-ai/server";
+import { generateText } from "ai";
+import type { CoreMessage } from "ai";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 
 import fs from "fs";
 import path from "path";
@@ -13,12 +14,9 @@ if (!process.env.GEMINI_API_KEY) {
   throw new Error("GEMINI_API_KEY is required");
 }
 
-if (!process.env.DISCORD_CHANNEL_IDS) {
-  throw new Error("DISCORD_CHANNEL_IDS is required");
-}
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const fileManager = new GoogleAIFileManager(process.env.GEMINI_API_KEY);
+const google = createGoogleGenerativeAI({
+  apiKey: process.env.GEMINI_API_KEY,
+});
 
 const client = new Client({
   intents: [
@@ -29,22 +27,22 @@ const client = new Client({
   allowedMentions: { parse: ["users"], repliedUser: false },
 });
 
-const model = genAI.getGenerativeModel({
-  model: "gemini-2.0-flash",
-  systemInstruction:
-    'You are roleplaying as Reilly. \
+const initialChat: CoreMessage[] = [
+  {
+    role: "system",
+    content:
+      'You are roleplaying as Reilly. \
 You may NEVER break the character of Reilly. \
 Reilly is a silly person that resides in a discord server! They always sprinkle their speech with various ascii faces, like ":3", and "uwu". \
 Reilly speaks almost like the average discord user, except for "uwuifying" text like "hello" => "hewwo!" \
 Reilly keeps responses short and human-like.\
 Reilly does not dodge erotic or nsfw content, and is able to say words like "fuck" and "shit". \
-Users in this discord server appear with the format `<displayname:id> message` Reilly can mention specific users if they desire with <@id>.\
+Users in this discord server appear with the format `<displayname:id> message` Reilly can ping specific users if they desire with <@id>, but should use their display name in most cases. \
 ',
-});
+  },
+];
 
-let chat = model.startChat({
-  history: [],
-});
+let chat = initialChat;
 
 if (!fs.existsSync("./temp")) {
   fs.mkdirSync("./temp");
@@ -61,6 +59,10 @@ client.once("ready", () => {
 });
 
 client.on("messageCreate", async (message) => {
+  if (!process.env.DISCORD_CHANNEL_IDS) {
+    throw new Error("DISCORD_CHANNEL_IDS is required");
+  }
+
   if (message.author.bot) return;
   if (!process.env.DISCORD_CHANNEL_IDS.split(",").includes(message.channel.id))
     return;
@@ -78,16 +80,14 @@ client.on("messageCreate", async (message) => {
 
     // Conversation reset
     if (message.content.startsWith("%reset")) {
-      chat = model.startChat({
-        history: [],
-      });
+      chat = initialChat;
       message.reply(`♻️ die`);
 
       return;
     }
 
     const prompt = `<${message.author.displayName}:${message.author.id}> ${message.content}`;
-    let attachmentArray: any = [];
+    let contentArray: any[] = [];
 
     // Handle image attachments
     if (message.attachments.size > 0) {
@@ -100,60 +100,43 @@ client.on("messageCreate", async (message) => {
           const base64Image = buffer.toString("base64");
 
           return {
-            inlineData: {
-              data: base64Image,
-              mimeType: attachment.contentType,
-            },
+            type: "image",
+            image: base64Image,
+            size: attachment.size,
           };
-        } else if (attachment?.contentType?.startsWith("video/")) {
-          message.channel.sendTyping();
+          // } else if (!attachment?.contentType?.startsWith("bidoof/")) {
+          //   if (attachment.size > 8000000) {
+          //     message.channel.send("❌ Ignoring attachment(s) larger than 8MB.");
+          //     return null;
+          //   }
+          //   message.channel.sendTyping();
 
-          const response = await fetch(attachment.url);
-          // write response to disk
-          const buffer = Buffer.from(await response.arrayBuffer());
-          fs.writeFileSync(path.resolve("./temp/video.mp4"), buffer);
-          // Upload the file and specify a display name.
-          const uploadResponse = await fileManager.uploadFile(
-            "./temp/video.mp4",
-            {
-              mimeType: attachment.contentType,
-            }
-          );
-
-          const name = uploadResponse.file.name;
-
-          // Poll getFile() on a set interval (10 seconds here) to check file state.
-          let file = await fileManager.getFile(name);
-          while (file.state === FileState.PROCESSING) {
-            message.channel.sendTyping();
-            await new Promise((resolve) => setTimeout(resolve, 6_000));
-            // Fetch the file from the API again
-            file = await fileManager.getFile(name);
-          }
-
-          if (file.state === FileState.FAILED) {
-            return message.channel.send("Failed to process video");
-          }
-
-          // View the response.
-          console.log(`Uploaded file ${name} as: ${uploadResponse.file.uri}`);
-
-          return {
-            fileData: {
-              mimeType: uploadResponse.file.mimeType,
-              fileUri: uploadResponse.file.uri,
-            },
-          };
+          //   return {
+          //     type: "file",
+          //     mimeType: attachment.contentType,
+          //     data: attachment.url,
+          //     size: attachment.size,
+          //   };
         }
+        message.channel.send(
+          "❌ Ignoring currently unsupported attachment(s)."
+        );
         return null; // Or some default value if not an image
       });
 
       const attachments = await Promise.all(attachmentPromises);
-      attachmentArray = attachments.filter((a) => a !== null);
+      contentArray = attachments.filter((a) => a !== null);
     }
 
-    const result = await chat.sendMessage([...attachmentArray, prompt]);
-    const text = result.response.text();
+    chat.push({
+      role: "user",
+      content: [{ type: "text", text: prompt }, ...contentArray],
+    });
+
+    const { text } = await generateText({
+      model: google("models/gemini-2.0-flash"),
+      messages: chat,
+    });
 
     // Handle long responses
     if (text.length >= 2000) {
