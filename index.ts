@@ -115,8 +115,8 @@ client.on("messageCreate", async (message) => {
 
     // Conversation reset
     if (message.content.startsWith("%reset")) {
-      chat = initialChat;
-      message.reply(`♻️ die`);
+      await storage.removeItem(`chat:${message.channelId}`);
+      message.reply(`♻️ Forgotten.`);
 
       return;
     }
