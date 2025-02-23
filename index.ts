@@ -146,6 +146,7 @@ client.on("messageCreate", async (message) => {
 
     const { response, text } = await generateText({
       model: google("models/gemini-2.0-flash"),
+      temperature: 1.5,
       messages: chat,
       tools: {
         booru: booruTool,
