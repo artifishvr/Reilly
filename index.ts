@@ -143,6 +143,10 @@ client.on("messageCreate", async (message) => {
         } else if (!attachment?.contentType?.startsWith("bidoof/")) {
           // todo add a proper check for unsupported attachments
           if (attachment.size > 8000000) {
+            chat.push({
+              role: "user",
+              content: `Info: The user sent a message with an attachment too large for you to download. Let them know.`,
+            });
             message.channel.send("❌ Ignoring attachment(s) larger than 8MB.");
             return null;
           }
@@ -159,9 +163,10 @@ client.on("messageCreate", async (message) => {
             size: attachment.size,
           };
         }
-        message.channel.send(
-          "❌ Ignoring currently unsupported attachment(s)."
-        );
+        chat.push({
+          role: "user",
+          content: `Info: The user sent a message with an attachment you can't comprehend. Let them know.`,
+        });
         return null; // Or some default value if not an image
       });
 
