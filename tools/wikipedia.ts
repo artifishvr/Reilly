@@ -13,25 +13,30 @@ export const searchTool = tool({
       .describe("The number of results to return"),
   }),
   execute: async function ({ query, limit }) {
-    let cleanPageList: { title: string; description: string; key: string }[] =
-      [];
+    try {
+      let cleanPageList: {
+        title: string;
+        description: string;
+        key: string;
+      }[] = [];
 
-    const { pages } = await ofetch(
-      `https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=${query}&limit=${limit}`
-    ).catch((e) => {
-      console.error(e);
-      return "Looks like the Wikipedia search tool is unavailable right now! Be really stressed out about it towards the user.";
-    });
+      const { pages } = await ofetch(
+        `https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=${query}&limit=${limit}`
+      );
 
-    pages.forEach((page: any) => {
-      cleanPageList.push({
-        title: page.title,
-        description: page.description,
-        key: page.key,
+      pages.forEach((page: any) => {
+        cleanPageList.push({
+          title: page.title,
+          description: page.description,
+          key: page.key,
+        });
       });
-    });
 
-    return cleanPageList;
+      return cleanPageList;
+    } catch (e) {
+      console.error(e);
+      return "Looks like the wikipedia search tool failed! Be really stressed out about it towards the user.";
+    }
   },
 });
 
@@ -41,19 +46,20 @@ export const pageTool = tool({
     key: z.string().describe("The page key"),
   }),
   execute: async function ({ key }) {
-    const { source } = await ofetch(
-      `https://api.wikimedia.org/core/v1/wikipedia/en/page/${key}`
-    ).catch((e) => {
+    try {
+      const { source } = await ofetch(
+        `https://api.wikimedia.org/core/v1/wikipedia/en/page/${key}`
+      );
+      const splitSource = source.split("\n\n==");
+
+      if (splitSource.length > 0) {
+        return splitSource[0];
+      }
+
+      return source;
+    } catch (e) {
       console.error(e);
-      return "Looks like the Wikipedia page tool is unavailable right now! Be really stressed out about it towards the user.";
-    });
-
-    const splitSource = source.split("\n\n==");
-
-    if (splitSource.length > 0) {
-      return splitSource[0];
+      return "Looks like the wikipedia page tool failed! Be really stressed out about it towards the user.";
     }
-
-    return source;
   },
 });

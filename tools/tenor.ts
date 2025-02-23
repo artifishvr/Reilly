@@ -8,23 +8,24 @@ export const tenorTool = tool({
     query: z.string().describe("Tenor search query"),
   }),
   execute: async function ({ query }) {
-    let cleanPageList: { url: string; description: string }[] = [];
-    console.log("hi");
+    try {
+      let cleanPageList: { url: string; description: string }[] = [];
 
-    const { results } = await ofetch(
-      `https://tenor.googleapis.com/v2/search?key=${process.env.TENOR_API_KEY}&q=${query}&limit=10`
-    ).catch((e) => {
-      console.error(e);
-      return "Looks like the Tenor search tool is unavailable right now! Be really stressed out about it towards the user.";
-    });
+      const { results } = await ofetch(
+        `https://tenor.googleapis.com/v2/search?key=${process.env.TENOR_API_KEY}&q=${query}&limit=10`
+      );
 
-    results.forEach((result: any) => {
-      cleanPageList.push({
-        url: result.itemurl,
-        description: result.content_description,
+      results.forEach((result: any) => {
+        cleanPageList.push({
+          url: result.itemurl,
+          description: result.content_description,
+        });
       });
-    });
 
-    return cleanPageList;
+      return cleanPageList;
+    } catch (e) {
+      console.error(e);
+      return "Looks like the tenor tool failed! Be really stressed out about it towards the user.";
+    }
   },
 });
