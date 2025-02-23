@@ -140,19 +140,24 @@ client.on("messageCreate", async (message) => {
             image: base64Image,
             size: attachment.size,
           };
-          // } else if (!attachment?.contentType?.startsWith("bidoof/")) {
-          //   if (attachment.size > 8000000) {
-          //     message.channel.send("❌ Ignoring attachment(s) larger than 8MB.");
-          //     return null;
-          //   }
-          //   message.channel.sendTyping();
+        } else if (!attachment?.contentType?.startsWith("bidoof/")) {
+          // todo add a proper check for unsupported attachments
+          if (attachment.size > 8000000) {
+            message.channel.send("❌ Ignoring attachment(s) larger than 8MB.");
+            return null;
+          }
+          message.channel.sendTyping();
 
-          //   return {
-          //     type: "file",
-          //     mimeType: attachment.contentType,
-          //     data: attachment.url,
-          //     size: attachment.size,
-          //   };
+          const response = await fetch(attachment.url);
+          const buffer = Buffer.from(await response.arrayBuffer());
+          const base64File = buffer.toString("base64");
+
+          return {
+            type: "file",
+            mimeType: attachment.contentType,
+            data: base64File,
+            size: attachment.size,
+          };
         }
         message.channel.send(
           "❌ Ignoring currently unsupported attachment(s)."
