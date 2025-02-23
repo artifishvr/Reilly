@@ -1,3 +1,4 @@
+// this file is cluttered, i'll seperate it someday
 import { Client, GatewayIntentBits } from "discord.js";
 import { generateText } from "ai";
 import type { CoreMessage } from "ai";
