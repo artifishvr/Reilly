@@ -147,7 +147,7 @@ client.on("messageCreate", async (message) => {
               role: "user",
               content: `Info: The user sent a message with an attachment too large for you to download. Let them know.`,
             });
-            message.channel.send("❌ Ignoring attachment(s) larger than 8MB.");
+
             return null;
           }
           message.channel.sendTyping();
