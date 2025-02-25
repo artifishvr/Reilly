@@ -1,6 +1,7 @@
 import { Message } from "discord.js";
 import { handleChannelMessage } from "./channel-handler";
 import { handleDmMessage } from "./dm-handler";
+import { config } from "../config";
 
 export async function handleMessage(message: Message) {
   if (!message.client?.user) return;
@@ -8,7 +9,9 @@ export async function handleMessage(message: Message) {
 
   // Routing
   if (message.channel.isDMBased()) {
-    await handleDmMessage(message);
+    if (config.discord.dmEnabled) {
+      await handleDmMessage(message);
+    }
   } else {
     await handleChannelMessage(message);
   }
