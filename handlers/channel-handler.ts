@@ -1,5 +1,6 @@
 import { Message } from "discord.js";
 import { generateText } from "ai";
+import { error } from "fahs";
 import { client } from "../client/discord-client";
 import { google, initialChat } from "../client/ai-client";
 import { config } from "../config";
@@ -77,8 +78,8 @@ export async function handleChannelMessage(message: Message) {
     // Update chat history
     chat.push(...response.messages);
     await saveChatHistory(message.channel.id, chat, ephemeralHistory);
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    error(error, "Channel Handler");
     return message.reply(`❌ Error!.`);
   }
 }

@@ -3,6 +3,7 @@ import redisDriver from "unstorage/drivers/redis";
 import memoryDriver from "unstorage/drivers/memory";
 import { config } from "../config";
 import type { CoreMessage } from "ai";
+import { info } from "fahs";
 
 export const storage = config.storage.kvUrl
   ? createStorage({
@@ -15,7 +16,10 @@ export const storage = config.storage.kvUrl
       driver: memoryDriver(),
     });
 
-console.log(config.storage.kvUrl ? "Using external KV" : "Using in-memory KV");
+info(config.storage.kvUrl ? "Using external KV" : "Using in-memory KV", {
+  label: "KV",
+  timestamp: false,
+});
 
 export function createStorageKey(
   id: string,

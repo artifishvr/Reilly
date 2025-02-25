@@ -1,6 +1,7 @@
 import { tool } from "ai";
 import { z } from "zod";
 import { ofetch } from "ofetch";
+import { error } from "fahs";
 
 export const searchTool = tool({
   description: "Search wikipedia for information",
@@ -33,8 +34,8 @@ export const searchTool = tool({
       });
 
       return cleanPageList;
-    } catch (e) {
-      console.error(e);
+    } catch (e: any) {
+      error(e, "Tools - Wikipedia Search");
       return "Looks like the wikipedia search tool failed! Be really stressed out about it towards the user.";
     }
   },
@@ -57,8 +58,8 @@ export const pageTool = tool({
       }
 
       return source;
-    } catch (e) {
-      console.error(e);
+    } catch (e: any) {
+      error(e, "Tools - Wikipedia Page");
       return "Looks like the wikipedia page tool failed! Be really stressed out about it towards the user.";
     }
   },

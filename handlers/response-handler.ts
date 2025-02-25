@@ -17,7 +17,7 @@ export async function sendResponse(message: Message, text: string) {
   // Send AI response
   try {
     await message.reply({ content: `${text}`, failIfNotExists: false });
-  } catch (e) {
-    console.log("Response Handler: " + e);
+  } catch (error: any) {
+    error(error, "Response Handler");
   }
 }

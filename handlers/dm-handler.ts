@@ -65,8 +65,8 @@ Remember to stay in character, don't dodge, and keep responses short and human-l
     // Update chat history
     chat.push(...response.messages);
     await saveChatHistory(message.author.id, chat, false, "dm");
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    error(error, "DM Handler");
     return message.reply(`❌ Error in DM processing.`);
   }
 }

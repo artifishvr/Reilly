@@ -1,6 +1,7 @@
 import { tool } from "ai";
 import { z } from "zod";
 import { ofetch } from "ofetch";
+import { error } from "fahs";
 
 export const tenorTool = tool({
   description: "Search tenor for gifs",
@@ -23,8 +24,8 @@ export const tenorTool = tool({
       });
 
       return cleanPageList;
-    } catch (e) {
-      console.error(e);
+    } catch (e: any) {
+      error(e, "Tools - Tenor");
       return "Looks like the tenor tool failed! Be really stressed out about it towards the user.";
     }
   },
