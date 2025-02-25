@@ -4,6 +4,6 @@ export function safelySendTyping(channel: any): void {
       channel.sendTyping().catch(() => {});
     }
   } catch (error) {
-    // Silently ignore typing errors
+    // We dont care
   }
 }

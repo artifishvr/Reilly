@@ -17,27 +17,43 @@ export const storage = config.storage.kvUrl
 
 console.log(config.storage.kvUrl ? "Using external KV" : "Using in-memory KV");
 
+export function createStorageKey(
+  id: string,
+  type: "dm" | "channel" = "channel"
+): string {
+  return type === "dm" ? `dm:${id}` : `chat:${id}`;
+}
+
 export async function getChatHistory(
-  channelId: string,
-  initial: CoreMessage[]
+  id: string,
+  initial: CoreMessage[],
+  type: "dm" | "channel" = "channel"
 ) {
-  return (await storage.getItem<CoreMessage[]>(`chat:${channelId}`)) || initial;
+  const key = createStorageKey(id, type);
+  return (await storage.getItem<CoreMessage[]>(key)) || initial;
 }
 
 export async function saveChatHistory(
-  channelId: string,
+  id: string,
   chat: CoreMessage[],
-  ephemeral = false
+  ephemeral = false,
+  type: "dm" | "channel" = "channel"
 ) {
+  const key = createStorageKey(id, type);
+
   if (ephemeral) {
-    await storage.setItem(`chat:${channelId}`, chat, {
+    await storage.setItem(key, chat, {
       ttl: 60 * 60 * 1000, // 1 hour
     });
   } else {
-    await storage.setItem(`chat:${channelId}`, chat);
+    await storage.setItem(key, chat);
   }
 }
 
-export async function resetChatHistory(channelId: string) {
-  await storage.removeItem(`chat:${channelId}`);
+export async function resetChatHistory(
+  id: string,
+  type: "dm" | "channel" = "channel"
+) {
+  const key = createStorageKey(id, type);
+  await storage.removeItem(key);
 }

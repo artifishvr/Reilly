@@ -5,18 +5,18 @@ WORKDIR /app
 FROM base AS install
 WORKDIR /temp
 COPY package.json bun.lockb ./
-# Install all dependencies at once to leverage Bun's speed
+# Install all dependencies for development
 RUN bun install --frozen-lockfile
-# Also install production-only deps to separate directory
-RUN bun install --frozen-lockfile --production --outdir /temp/prod-modules
+# Install production dependencies to a separate directory
+WORKDIR /temp/prod-modules
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile --production
 
 # Build the application
 FROM base AS builder
 WORKDIR /build
 COPY --from=install /temp/node_modules ./node_modules
 COPY . .
-# If you need a build step, uncomment this line:
-# RUN bun run build
 
 # Production image
 FROM base AS release
@@ -26,7 +26,7 @@ RUN addgroup -S appuser && adduser -S -G appuser appuser
 RUN mkdir -p /app/temp && chown -R appuser:appuser /app
 
 # Copy only necessary files to production image
-COPY --from=install /temp/prod-modules ./node_modules
+COPY --from=install /temp/prod-modules/node_modules ./node_modules
 COPY --from=builder /build/index.ts .
 COPY --from=builder /build/config.ts .
 COPY --from=builder /build/client ./client

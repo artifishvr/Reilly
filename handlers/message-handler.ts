@@ -6,7 +6,7 @@ export async function handleMessage(message: Message) {
   if (!message.client?.user) return;
   if (message.author.bot) return;
 
-  // Route message to appropriate handler
+  // Routing
   if (message.channel.isDMBased()) {
     await handleDmMessage(message);
   } else {

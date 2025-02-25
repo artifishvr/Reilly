@@ -33,24 +33,20 @@ export async function handleChannelMessage(message: Message) {
   try {
     safelySendTyping(message.channel);
 
-    // Ephemeral history for mention-only channels
     const ephemeralHistory = isMention && !isAllowedChannel;
 
-    // Handle reset command
     if (message.content.startsWith("%reset")) {
       await resetChatHistory(message.channel.id);
       await message.reply(`♻️ Forgotten.`);
       return;
     }
 
-    // Get chat history
     const chat = await getChatHistory(message.channel.id, initialChat);
 
-    // Process the message content and attachments
     const prompt = `${message.author.displayName}: ${message.content}`;
     const contentArray = await processAttachments(message, chat);
 
-    // Add context and user messages to chat
+    // Context
     chat.push({
       role: "user",
       content: `Info: Current time in UTC is ${new Date().toUTCString()}. The next message is from ${
@@ -63,7 +59,6 @@ export async function handleChannelMessage(message: Message) {
       content: [{ type: "text", text: prompt }, ...contentArray],
     });
 
-    // Generate AI response
     const { response, text } = await generateText({
       model: google("models/gemini-2.0-flash"),
       temperature: 1.5,
@@ -77,7 +72,6 @@ export async function handleChannelMessage(message: Message) {
       maxSteps: 10,
     });
 
-    // Send the response
     await sendResponse(message, text);
 
     // Update chat history

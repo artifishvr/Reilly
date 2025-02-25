@@ -23,6 +23,7 @@ export async function processAttachments(
           size: attachment.size,
         };
       } else if (!attachment?.contentType?.startsWith("bidoof/")) {
+        // todo actually have a list of supported attachments
         // Large file check
         if (attachment.size > 8000000) {
           chat.push({

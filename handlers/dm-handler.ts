@@ -12,32 +12,26 @@ import { safelySendTyping } from "./typing-handler";
 const dmCooldowns = new Map();
 
 export async function handleDmMessage(message: Message) {
-  // Check cooldown to prevent spam
+  // Cooldowns
   const lastMessageTime = dmCooldowns.get(message.author.id);
-  if (lastMessageTime && Date.now() - lastMessageTime < 2000) return; // Longer cooldown for DMs
+  if (lastMessageTime && Date.now() - lastMessageTime < 2000) return;
   dmCooldowns.set(message.author.id, Date.now());
 
   try {
     safelySendTyping(message.channel);
 
-    // Create a DM-specific chat history key
-    const dmChatKey = `dm:${message.author.id}`;
-
-    // Handle reset command
     if (message.content.startsWith("%reset")) {
-      await resetChatHistory(dmChatKey);
+      await resetChatHistory(message.author.id, "dm");
       await message.reply(`♻️ Forgotten our DM conversation.`);
       return;
     }
 
-    // Get chat history
-    const chat = await getChatHistory(dmChatKey, initialChat);
+    const chat = await getChatHistory(message.author.id, initialChat, "dm");
 
-    // Process the message content and attachments
     const prompt = `${message.author.displayName}: ${message.content}`;
     const contentArray = await processAttachments(message, chat);
 
-    // Add context and user messages to chat with DM-specific context
+    // Context
     chat.push({
       role: "user",
       content: `Info: Current time in UTC is ${new Date().toUTCString()}. 
@@ -53,7 +47,6 @@ Remember to stay in character, don't dodge, and keep responses short and human-l
       content: [{ type: "text", text: prompt }, ...contentArray],
     });
 
-    // Generate AI response with possibly different parameters for DMs
     const { response, text } = await generateText({
       model: google("models/gemini-2.0-flash"),
       temperature: 1.5,
@@ -67,12 +60,11 @@ Remember to stay in character, don't dodge, and keep responses short and human-l
       maxSteps: 10,
     });
 
-    // Send the response
     await sendResponse(message, text);
 
-    // Update chat history - DMs always persist (not ephemeral)
+    // Update chat history
     chat.push(...response.messages);
-    await saveChatHistory(dmChatKey, chat);
+    await saveChatHistory(message.author.id, chat, false, "dm");
   } catch (error) {
     console.error(error);
     return message.reply(`❌ Error in DM processing.`);

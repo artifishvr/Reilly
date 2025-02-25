@@ -12,7 +12,6 @@ export const config = {
   },
 };
 
-// Validate required environment variables
 if (!config.discord.token) {
   throw new Error("DISCORD_TOKEN is required");
 }
