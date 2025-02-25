@@ -1,5 +1,5 @@
 {
-  "name": "spongerp-gemini",
+  "name": "reilly",
   "module": "index.ts",
   "type": "module",
   "scripts": {
@@ -12,7 +12,6 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@ai-sdk/google": "^1.1.16",
     "ai": "^4.1.45",
     "discord.js": "^14.17.3",
     "ioredis": "^5.5.0",
