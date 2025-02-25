@@ -47,7 +47,7 @@ export async function saveChatHistory(
 
   if (ephemeral) {
     await storage.setItem(key, chat, {
-      ttl: 60 * 60 * 1000, // 1 hour
+      ttl: 60 * 60 * 2,
     });
   } else {
     await storage.setItem(key, chat);
