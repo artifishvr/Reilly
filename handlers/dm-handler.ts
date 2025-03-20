@@ -8,6 +8,7 @@ import { booruTool } from "../tools/booru";
 import { searchTool, pageTool } from "../tools/wikipedia";
 import { tenorTool } from "../tools/tenor";
 import { safelySendTyping } from "./typing-handler";
+import { error } from "fahs";
 
 const dmCooldowns = new Map();
 
@@ -65,8 +66,8 @@ Remember to stay in character, don't dodge, and keep responses short and human-l
     // Update chat history
     chat.push(...response.messages);
     await saveChatHistory(message.author.id, chat, false, "dm");
-  } catch (error: any) {
-    error(error, "DM Handler");
+  } catch (e: any) {
+    error(e, "DM Handler");
     return message.reply(`❌ Error in DM processing.`);
   }
 }

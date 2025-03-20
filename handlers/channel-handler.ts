@@ -78,8 +78,8 @@ export async function handleChannelMessage(message: Message) {
     // Update chat history
     chat.push(...response.messages);
     await saveChatHistory(message.channel.id, chat, ephemeralHistory);
-  } catch (error: any) {
-    error(error, "Channel Handler");
+  } catch (e: any) {
+    error(e, "Channel Handler");
     return message.reply(`❌ Error!.`);
   }
 }
