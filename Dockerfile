@@ -4,12 +4,12 @@ WORKDIR /app
 # Install dependencies into temp directory for caching
 FROM base AS install
 WORKDIR /temp
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 # Install all dependencies for development
 RUN bun install --frozen-lockfile
 # Install production dependencies to a separate directory
 WORKDIR /temp/prod-modules
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile --production
 
 # Build the application
@@ -34,7 +34,7 @@ COPY --from=builder /build/handlers ./handlers
 COPY --from=builder /build/tools ./tools
 COPY --from=builder /build/storage ./storage
 COPY --from=builder /build/package.json .
-COPY --from=builder /build/bun.lockb .
+COPY --from=builder /build/bun.lock .
 
 ENV NODE_ENV=production
 # Switch to non-root user for security

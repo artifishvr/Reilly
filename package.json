@@ -12,8 +12,8 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@ai-sdk/google": "^1.1.16",
-    "ai": "^4.1.45",
+    "@ai-sdk/google": "^1.1.26",
+    "ai": "^4.1.63",
     "discord.js": "^14.17.3",
     "fahs": "^1.0.3",
     "ioredis": "^5.5.0",
