@@ -60,20 +60,23 @@ export async function handleChannelMessage(message: Message) {
       content: [{ type: "text", text: prompt }, ...contentArray],
     });
 
-    const { response, text } = await generateText({
-      model: google("models/gemini-2.0-flash"),
-      temperature: 1.5,
-      messages: chat,
-      tools: {
-        booru: booruTool,
-        wikipediaSearch: searchTool,
-        wikipediaPage: pageTool,
-        tenor: tenorTool,
+    const { response, text, files } = await generateText({
+      model: google("gemini-2.0-flash-exp"),
+      providerOptions: {
+        google: { responseModalities: ["TEXT", "IMAGE"] },
       },
-      maxSteps: 10,
+      // temperature: 1.5,
+      messages: chat,
+      // tools: {
+      //   booru: booruTool,
+      //   wikipediaSearch: searchTool,
+      //   wikipediaPage: pageTool,
+      //   tenor: tenorTool,
+      // },
+      // maxSteps: 10,
     });
 
-    await sendResponse(message, text);
+    await sendResponse(message, text, files);
 
     // Update chat history
     chat.push(...response.messages);
