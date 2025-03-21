@@ -1,6 +1,5 @@
 import { tool } from "ai";
 import { z } from "zod";
-import { ofetch } from "ofetch";
 import { error } from "fahs";
 import { createFal } from "@ai-sdk/fal";
 import { experimental_generateImage as generateImage } from "ai";
@@ -15,11 +14,22 @@ export const imageTool = tool({
       .describe(
         "A descriptive prompt with keywords describing the image you want to generate."
       ),
+    type: z
+      .enum(["text", "general"])
+      .describe(
+        "The type of image to generate: 'text' for images with text, 'general' for standard images"
+      )
+      .default("general"),
   }),
-  execute: async function ({ prompt }) {
+  execute: async function ({ prompt, type }) {
     try {
+      const model =
+        type === "text"
+          ? fal.image("fal-ai/fast-sdxl")
+          : fal.image("fal-ai/flux/schnell");
+
       const { image } = await generateImage({
-        model: fal.image("fal-ai/flux-pro/v1.1-ultra"),
+        model,
         prompt: prompt,
         providerOptions: {
           fal: {
