@@ -4,6 +4,7 @@
     "": {
       "name": "reilly",
       "dependencies": {
+        "@ai-sdk/fal": "^0.0.11",
         "@ai-sdk/google": "^1.1.26",
         "ai": "^4.1.63",
         "discord.js": "^14.17.3",
@@ -22,11 +23,13 @@
     },
   },
   "packages": {
+    "@ai-sdk/fal": ["@ai-sdk/fal@0.0.11", "", { "dependencies": { "@ai-sdk/provider": "1.0.12", "@ai-sdk/provider-utils": "2.1.15" }, "peerDependencies": { "zod": "^3.0.0" } }, "sha512-lVjG5HTxNZ3l40yI1uJYe2cHmDdk1cuiQff0KQz/A5c6BpwSlyKUVWvb8HxBJETzWRBNDWK1dbWcXVTm+WK5aw=="],
+
     "@ai-sdk/google": ["@ai-sdk/google@1.1.26", "", { "dependencies": { "@ai-sdk/provider": "1.0.12", "@ai-sdk/provider-utils": "2.1.14" }, "peerDependencies": { "zod": "^3.0.0" } }, "sha512-VHhwQQZZ2BPWgsw0CKQDyA7ZddDfNKXQ/lcTSRJD16nD86LaSZkDzx3Wx7Ln1lXmokzPEv/tuFrCs5ntqB2jrA=="],
 
     "@ai-sdk/provider": ["@ai-sdk/provider@1.0.12", "", { "dependencies": { "json-schema": "^0.4.0" } }, "sha512-88Uu1zJIE1UUOVJWfE2ybJXgiH8JJ97QY9fbmplErEbfa/k/1kF+tWMVAAJolF2aOGmazQGyQLhv4I9CCuVACw=="],
 
-    "@ai-sdk/provider-utils": ["@ai-sdk/provider-utils@2.1.14", "", { "dependencies": { "@ai-sdk/provider": "1.0.12", "eventsource-parser": "^3.0.0", "nanoid": "^3.3.8", "secure-json-parse": "^2.7.0" }, "peerDependencies": { "zod": "^3.0.0" }, "optionalPeers": ["zod"] }, "sha512-0fNQwstwqHP+cE9bP9nQXeEhY/qJRGW5Y+AQrvwzd0EI2+gH1GmwI1IC/gIOksmz/gRy4G+kXXD+Fbq4T/jCbA=="],
+    "@ai-sdk/provider-utils": ["@ai-sdk/provider-utils@2.1.15", "", { "dependencies": { "@ai-sdk/provider": "1.0.12", "eventsource-parser": "^3.0.0", "nanoid": "^3.3.8", "secure-json-parse": "^2.7.0" }, "peerDependencies": { "zod": "^3.0.0" }, "optionalPeers": ["zod"] }, "sha512-ndMVtDm2xS86t45CJZSfyl7UblZFewRB8gZkXQHeNi7BhjCYkhE+XQMwfDl6UOAO7kaV60IC1R4JLDWxWiiHug=="],
 
     "@ai-sdk/react": ["@ai-sdk/react@1.1.24", "", { "dependencies": { "@ai-sdk/provider-utils": "2.1.14", "@ai-sdk/ui-utils": "1.1.20", "swr": "^2.2.5", "throttleit": "2.1.0" }, "peerDependencies": { "react": "^18 || ^19 || ^19.0.0-rc", "zod": "^3.0.0" }, "optionalPeers": ["react", "zod"] }, "sha512-20rVK34QCaEl/4u87/Y+JXt7eCzF60UwoJOjHJhlCdmFrbk6AfRsijv0ludA9ELArE+ulxkSf21L3FokkZ2Gmg=="],
 
@@ -180,8 +183,16 @@
 
     "zod-to-json-schema": ["zod-to-json-schema@3.24.4", "", { "peerDependencies": { "zod": "^3.24.1" } }, "sha512-0uNlcvgabyrni9Ag8Vghj21drk7+7tp7VTwwR7KxxXXc/3pbXz2PHlDgj3cICahgF1kHm4dExBFj7BXrZJXzig=="],
 
+    "@ai-sdk/google/@ai-sdk/provider-utils": ["@ai-sdk/provider-utils@2.1.14", "", { "dependencies": { "@ai-sdk/provider": "1.0.12", "eventsource-parser": "^3.0.0", "nanoid": "^3.3.8", "secure-json-parse": "^2.7.0" }, "peerDependencies": { "zod": "^3.0.0" }, "optionalPeers": ["zod"] }, "sha512-0fNQwstwqHP+cE9bP9nQXeEhY/qJRGW5Y+AQrvwzd0EI2+gH1GmwI1IC/gIOksmz/gRy4G+kXXD+Fbq4T/jCbA=="],
+
+    "@ai-sdk/react/@ai-sdk/provider-utils": ["@ai-sdk/provider-utils@2.1.14", "", { "dependencies": { "@ai-sdk/provider": "1.0.12", "eventsource-parser": "^3.0.0", "nanoid": "^3.3.8", "secure-json-parse": "^2.7.0" }, "peerDependencies": { "zod": "^3.0.0" }, "optionalPeers": ["zod"] }, "sha512-0fNQwstwqHP+cE9bP9nQXeEhY/qJRGW5Y+AQrvwzd0EI2+gH1GmwI1IC/gIOksmz/gRy4G+kXXD+Fbq4T/jCbA=="],
+
+    "@ai-sdk/ui-utils/@ai-sdk/provider-utils": ["@ai-sdk/provider-utils@2.1.14", "", { "dependencies": { "@ai-sdk/provider": "1.0.12", "eventsource-parser": "^3.0.0", "nanoid": "^3.3.8", "secure-json-parse": "^2.7.0" }, "peerDependencies": { "zod": "^3.0.0" }, "optionalPeers": ["zod"] }, "sha512-0fNQwstwqHP+cE9bP9nQXeEhY/qJRGW5Y+AQrvwzd0EI2+gH1GmwI1IC/gIOksmz/gRy4G+kXXD+Fbq4T/jCbA=="],
+
     "@discordjs/rest/@discordjs/collection": ["@discordjs/collection@2.1.1", "", {}, "sha512-LiSusze9Tc7qF03sLCujF5iZp7K+vRNEDBZ86FT9aQAv3vxMLihUvKvpsCWiQ2DJq1tVckopKm1rxomgNUc9hg=="],
 
     "@discordjs/ws/@discordjs/collection": ["@discordjs/collection@2.1.1", "", {}, "sha512-LiSusze9Tc7qF03sLCujF5iZp7K+vRNEDBZ86FT9aQAv3vxMLihUvKvpsCWiQ2DJq1tVckopKm1rxomgNUc9hg=="],
+
+    "ai/@ai-sdk/provider-utils": ["@ai-sdk/provider-utils@2.1.14", "", { "dependencies": { "@ai-sdk/provider": "1.0.12", "eventsource-parser": "^3.0.0", "nanoid": "^3.3.8", "secure-json-parse": "^2.7.0" }, "peerDependencies": { "zod": "^3.0.0" }, "optionalPeers": ["zod"] }, "sha512-0fNQwstwqHP+cE9bP9nQXeEhY/qJRGW5Y+AQrvwzd0EI2+gH1GmwI1IC/gIOksmz/gRy4G+kXXD+Fbq4T/jCbA=="],
   }
 }

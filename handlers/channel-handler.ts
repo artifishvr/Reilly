@@ -7,6 +7,7 @@ import { config } from "../config";
 import { booruTool } from "../tools/booru";
 import { searchTool, pageTool } from "../tools/wikipedia";
 import { tenorTool } from "../tools/tenor";
+import { imageTool } from "../tools/image";
 import { processAttachments } from "./attachment-handler";
 import { sendResponse } from "./response-handler";
 import { getChatHistory, saveChatHistory, resetChatHistory } from "../storage";
@@ -69,6 +70,7 @@ export async function handleChannelMessage(message: Message) {
         wikipediaSearch: searchTool,
         wikipediaPage: pageTool,
         tenor: tenorTool,
+        image: imageTool,
       },
       maxSteps: 10,
     });

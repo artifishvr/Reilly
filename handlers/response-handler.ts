@@ -4,6 +4,9 @@ import { error } from "fahs";
 import { Message } from "discord.js";
 
 export async function sendResponse(message: Message, text: string) {
+  // regex to fix markdown links
+  text = text.replace(/\[(https?:\/\/[^\]]+)\]\([^)]+\)/g, "$1");
+
   // Handle long responses
   if (text.length >= 2000) {
     fs.writeFileSync(path.resolve("./temp/how.txt"), text);
