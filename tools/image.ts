@@ -19,12 +19,11 @@ export const imageTool = tool({
   execute: async function ({ prompt }) {
     try {
       const { image } = await generateImage({
-        model: fal.image("fal-ai/fast-sdxl"),
+        model: fal.image("fal-ai/flux-pro/v1.1-ultra"),
         prompt: prompt,
         providerOptions: {
           fal: {
             enable_safety_checker: false,
-            negative_prompt: "cartoon, illustration, animation. face.",
           },
         },
       });
