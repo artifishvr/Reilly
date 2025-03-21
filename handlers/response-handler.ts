@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { error } from "fahs";
+import { Message } from "discord.js";
 
 export async function sendResponse(message: Message, text: string) {
   // Handle long responses
@@ -16,6 +17,7 @@ export async function sendResponse(message: Message, text: string) {
 
   // Send AI response
   try {
+    await message.reply({ content: `${text}`, failIfNotExists: false });
   } catch (e: any) {
     error(e, "Response Handler");
   }
