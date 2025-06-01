@@ -20,7 +20,7 @@ export async function handleChannelMessage(message: Message) {
 
   const isMention = message.mentions.users.has(client.user.id);
   const isAllowedChannel = config.discord.channelIds.includes(
-    message.channel.id
+    message.channel.id,
   );
 
   // Only respond to mentions or messages in allowed channels
@@ -62,7 +62,7 @@ export async function handleChannelMessage(message: Message) {
     });
 
     const { response, text } = await generateText({
-      model: google("models/gemini-2.0-flash"),
+      model: google("models/gemini-2.0-flash-lite"),
       temperature: 1.5,
       messages: chat,
       tools: {

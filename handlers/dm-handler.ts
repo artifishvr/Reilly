@@ -35,10 +35,10 @@ export async function handleDmMessage(message: Message) {
     // Context
     chat.push({
       role: "user",
-      content: `Info: Current time in UTC is ${new Date().toUTCString()}. 
+      content: `Info: Current time in UTC is ${new Date().toUTCString()}.
 The next message is from ${
         message.author.displayName
-      } in a private DM conversation. 
+      } in a private DM conversation.
 This is a one-on-one direct message conversation, not in a server channel.
 Remember to stay in character, don't dodge, and keep responses short and human-like.`,
     });
@@ -49,7 +49,7 @@ Remember to stay in character, don't dodge, and keep responses short and human-l
     });
 
     const { response, text } = await generateText({
-      model: google("models/gemini-2.0-flash"),
+      model: google("models/gemini-2.0-flash-lite"),
       temperature: 1.5,
       messages: chat,
       tools: {

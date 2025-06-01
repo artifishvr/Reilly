@@ -22,7 +22,7 @@ export const client = new Client({
 
 export function setupDiscordClient() {
   client.once("ready", () => {
-    info("Ready!", {
+    info(`Ready as ${client.user?.tag}!`, {
       label: "Discord Client",
       timestamp: false,
     });
