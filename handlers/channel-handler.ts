@@ -5,7 +5,11 @@ import { client } from "../client/discord-client";
 import { google, initialChat } from "../client/ai-client";
 import { config } from "../config";
 import { booruTool } from "../tools/booru";
-import { searchTool, pageTool } from "../tools/wikipedia";
+import {
+  searchTool as wikipediaSearch,
+  pageTool as wikipediaPage,
+} from "../tools/wikipedia";
+import { searchTool } from "../tools/search";
 import { tenorTool } from "../tools/tenor";
 import { imageTool } from "../tools/image";
 import { processAttachments } from "./attachment-handler";
@@ -66,9 +70,10 @@ export async function handleChannelMessage(message: Message) {
       temperature: 1.5,
       messages: chat,
       tools: {
+        search: searchTool,
         booru: booruTool,
-        wikipediaSearch: searchTool,
-        wikipediaPage: pageTool,
+        wikipediaSearch,
+        wikipediaPage,
         tenor: tenorTool,
         image: imageTool,
       },

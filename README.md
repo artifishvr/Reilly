@@ -10,7 +10,7 @@
   <h3 align="center">Reilly</h3>
   <img src='https://img.shields.io/github/license/artifishvr/Reilly?style=flat-square'>
   <img src='https://img.shields.io/github/commit-activity/m/artifishvr/Reilly?style=flat-square'>
-  
+
   <p align="center">
     <!-- <a href=""><strong>Invite the bot! » (coming soon maybe)</strong></a> -->
     <br />
@@ -37,13 +37,15 @@
 
 Reilly is a bot using google's gemini 2.0 flash model to roleplay like a human in your discord server, with vision and tools.
 
-It's AI slop.
+AI slop!!!!!!
 
 ### Current Tools
 
 - Booru - Searches gelbooru
+- Search - Searches the internet using the Brave Search API
 - Tenor - Searches tenor gifs
 - Wikipedia - Searches wikipedia and can view pages
+- Image Generation (experimental) - Uses fal.ai to generate images
 
 ### Built With
 

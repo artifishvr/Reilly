@@ -5,7 +5,11 @@ import { processAttachments } from "./attachment-handler";
 import { sendResponse } from "./response-handler";
 import { getChatHistory, saveChatHistory, resetChatHistory } from "../storage";
 import { booruTool } from "../tools/booru";
-import { searchTool, pageTool } from "../tools/wikipedia";
+import {
+  searchTool as wikipediaSearch,
+  pageTool as wikipediaPage,
+} from "../tools/wikipedia";
+import { searchTool } from "../tools/search";
 import { tenorTool } from "../tools/tenor";
 import { safelySendTyping } from "./typing-handler";
 import { error } from "fahs";
@@ -53,9 +57,10 @@ Remember to stay in character, don't dodge, and keep responses short and human-l
       temperature: 1.5,
       messages: chat,
       tools: {
+        search: searchTool,
         booru: booruTool,
-        wikipediaSearch: searchTool,
-        wikipediaPage: pageTool,
+        wikipediaSearch,
+        wikipediaPage,
         tenor: tenorTool,
       },
       maxSteps: 10,
