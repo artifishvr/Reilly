@@ -12,6 +12,7 @@ import {
 import { searchTool } from "../tools/search";
 import { tenorTool } from "../tools/tenor";
 import { imageTool } from "../tools/image";
+import { execTool } from "../tools/exec";
 import { processAttachments } from "./attachment-handler";
 import { sendResponse } from "./response-handler";
 import { getChatHistory, saveChatHistory, resetChatHistory } from "../storage";
@@ -76,6 +77,7 @@ export async function handleChannelMessage(message: Message) {
         wikipediaPage,
         tenor: tenorTool,
         image: imageTool,
+        exec: execTool,
       },
       maxSteps: 10,
     });
