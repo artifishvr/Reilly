@@ -36,7 +36,7 @@ export const searchTool = tool({
       return {
         results: searchResults.web.results,
         instruction:
-          "Include these results in your response, in a format (e.g., summary, list, comparison) relevant to the request. For lists, format results as [Title](<URL>)",
+          "Include these results in your response, in a format (e.g., summary, list, comparison) relevant to the request. For lists, make sure every result is formatted as [Title](<URL>), and don't send more than 5 results at once, unless the user wants more.",
       };
     } catch (e: any) {
       error(e, "Tools - Search");

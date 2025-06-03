@@ -9,22 +9,22 @@ export const booruTool = tool({
     tags: z
       .string()
       .describe(
-        "The booru tag(s) to search for. Spaces in tag names should be replaced with underscores, and tags should be separated by spaces."
+        "The booru tag(s) to search for. Spaces in tag names should be replaced with underscores, and tags should be separated by spaces.",
       ),
     index: z
       .number()
       .optional()
       .default(0)
       .describe(
-        "The index of the image to return (i.e. if you've already sent one with the same tags). If the link to the post is the same as the previous one, you should change the parameters (like the index) to get a new one."
+        "The index of the image to return (i.e. if you've already sent one with the same tags). If the link to the post is the same as the previous one, you should change the parameters (like the index) to get a new one.",
       ),
   }),
   execute: async function ({ tags, index }) {
     try {
       const { data } = await ofetch(
         `https://gelbooru.com/index.php?page=dapi&json=1&s=post&q=index&limit=1&tags=${
-          tags + " -rating:explicit -rating:questionable"
-        }&pid=${index}`
+          tags + " -rating:explicit"
+        }&pid=${index}`,
       );
       if (!data?.post?.[0]) {
         return "No results found. Try different tags, maybe try index + 1? Don't let the user know until you're sure there are no results.";
