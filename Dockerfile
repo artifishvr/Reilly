@@ -39,6 +39,7 @@ COPY --from=builder /build/package.json .
 COPY --from=builder /build/bun.lock .
 
 ENV NODE_ENV=production
+ENV CONTAINER_EXEC=true
 # Switch to non-root user for security
 USER appuser
 

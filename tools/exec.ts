@@ -9,13 +9,14 @@ export const execTool = tool({
   }),
   execute: async function ({ command }) {
     try {
-      if (process.env.EXEC == "true") {
-        const proc = Bun.spawnSync(["sh", "-c", command], {
+      if (process.env.CONTAINER_EXEC == "true") {
+        const proc = Bun.spawnSync(["bash", "-c", command], {
           timeout: 10_000,
         });
 
         return {
-          output: proc?.stdout?.toString() || "The command produced no output",
+          exitCode: proc.exitCode,
+          output: proc?.stdout?.toString() || "None",
           instruction:
             "Make sure to tell the user what you tried to do, and what the result was.",
         };
