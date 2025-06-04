@@ -16,7 +16,7 @@ export const execTool = tool({
 
         return {
           exitCode: proc.exitCode,
-          output: proc?.stdout?.toString() || "None",
+          output: proc?.stdout?.toString() || "",
           instruction:
             "Make sure to tell the user what you tried to do, and what the result was.",
         };
