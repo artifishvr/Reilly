@@ -10,7 +10,7 @@ export const execTool = tool({
   execute: async function ({ command }) {
     try {
       if (process.env.EXEC == "true") {
-        const proc = Bun.spawnSync(command.split(" "), {
+        const proc = Bun.spawnSync(["sh", "-c", command], {
           timeout: 10_000,
         });
 
