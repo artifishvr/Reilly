@@ -20,7 +20,7 @@ COPY . .
 
 # Production image
 FROM base AS release
-RUN apk add --no-cache curl wget bash python3
+RUN apk add --no-cache curl wget bash python3 expect
 
 # Create a non-root user for better security
 RUN addgroup -S appuser && adduser -S -G appuser appuser

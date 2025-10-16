@@ -10,13 +10,14 @@ export const execTool = tool({
   execute: async function ({ command }) {
     try {
       if (process.env.CONTAINER_EXEC == "true") {
-        const proc = Bun.spawnSync(["bash", "-c", command], {
+        const proc = Bun.spawnSync(["bash", "-c", "unbuffer", command], {
           timeout: 10_000,
         });
 
         return {
           exitCode: proc.exitCode,
-          output: proc?.stdout?.toString() || "",
+          stdout: proc.stdout?.toString() || "",
+          stderr: proc.stderr?.toString() || "",
           instruction:
             "Make sure to tell the user what you tried to do, and what the result was.",
         };
