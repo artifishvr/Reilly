@@ -10,6 +10,10 @@ export const config = {
   storage: {
     kvUrl: process.env.KV_URL,
   },
+  models: {
+    channelmodel: "models/gemini-2.5-flash-lite",
+    dmmodel: "models/gemini-2.5-flash-lite",
+  }
 };
 
 if (!config.discord.token) {

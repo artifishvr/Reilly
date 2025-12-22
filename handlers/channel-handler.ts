@@ -67,7 +67,7 @@ export async function handleChannelMessage(message: Message) {
     });
 
     const { response, text } = await generateText({
-      model: google("models/gemini-2.0-flash-lite"),
+      model: google(config.models.channelmodel),
       temperature: 1.5,
       messages: chat,
       tools: {

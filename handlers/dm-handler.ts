@@ -12,6 +12,7 @@ import {
 import { searchTool } from "../tools/search";
 import { tenorTool } from "../tools/tenor";
 import { safelySendTyping } from "./typing-handler";
+import { config } from "../config";
 import { error } from "fahs";
 
 const dmCooldowns = new Map();
@@ -53,7 +54,7 @@ Remember to stay in character, don't dodge, and keep responses short and human-l
     });
 
     const { response, text } = await generateText({
-      model: google("models/gemini-2.0-flash-lite"),
+      model: google(config.models.dmmodel),
       temperature: 1.5,
       messages: chat,
       tools: {
