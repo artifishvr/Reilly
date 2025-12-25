@@ -10,7 +10,7 @@ export const execTool = tool({
   execute: async function ({ command }) {
     try {
       if (process.env.CONTAINER_EXEC == "true") {
-        const proc = Bun.spawnSync(["bash", "-c", "unbuffer", command], {
+        const proc = Bun.spawnSync(["unbuffer", "bash", "-c", command], {
           timeout: 10_000,
         });
 
